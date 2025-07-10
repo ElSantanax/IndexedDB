@@ -1,5 +1,5 @@
 function crmDB() {
-    // Crear base de datos versión 1
+    // Crear base de datos versión 1.0
     let crmDB = window.indexedDB.open('crm', 1)
 
     // Si hay error
@@ -13,8 +13,21 @@ function crmDB() {
     }
 
     // Configuración de la base de datos
-    crmDB.onupgradeneeded = function () {
-        console.log('Este metodo solo se ejecuta una vez');
+    crmDB.onupgradeneeded = function (e) {
+
+        const db = e.target.result;
+
+        const objectStore = db.createObjectStore('crm', {
+            keyPath: 'crm',
+            autoIncrement: true
+        });
+
+        // Definir las columnas
+        objectStore.createIndex('nombre', 'nombre', { unique: false });
+        objectStore.createIndex('correo', 'correo', { unique: true });
+        objectStore.createIndex('telefono', 'telefono', { unique: false });
+
+        console.log('Columnas creada');
     }
 }
 
